@@ -1,6 +1,5 @@
 package org.wulfnoth.ml.classification
 
-import breeze.collection.mutable.SparseArray
 import org.wulfnoth.ml.LabeledVector
 
 import scala.collection.mutable
@@ -14,23 +13,29 @@ class NaiveBayes {
 
 	private var dim = 0
 
-	private var smooth = 1
+	private var smooth: Double = 1
 
 	private def statisticLabel(data: Array[LabeledVector]) = {
 		data.foreach(x => {
 			val count = map.getOrElseUpdate(x.label, CountVector(dim))
-			count.inc
+			count.inc()
 			x.vector.activeIterator.foreach(y => count.update(y._1, y._2))
 		})
+	}
+
+	def smooth(s: Double): NaiveBayes = {
+		if (s >= 0.0 && s <= 1.0) smooth = s
+		this
 	}
 
 	def fit(data: Array[LabeledVector]): NaiveBayesModel = {
 		dim = data.head.vector.size
 		statisticLabel(data)
+		new NaiveBayesModel(map, dim, smooth)
+	}
 
-		map.foreach(println)
-
-		null
+	override def toString: String = {
+		map.toArray.mkString("[", ",", "]")
 	}
 
 }

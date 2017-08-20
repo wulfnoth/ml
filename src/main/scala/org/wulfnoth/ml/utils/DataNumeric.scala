@@ -8,7 +8,7 @@ import breeze.linalg.DenseVector
 import org.wulfnoth.ml.LabeledVector
 import org.wulfnoth.ml.classification.NaiveBayes
 
-import scala.collection.mutable
+import scala.collection.{immutable, mutable}
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -20,14 +20,14 @@ class DataNumeric {
 		val dict = new mutable.HashMap[String, Int]()
 		val id = new AtomicInteger()
 
-		def get(key: String) = dict.getOrElseUpdate(key, id.getAndIncrement())
+		def get(key: String): Int = dict.getOrElseUpdate(key, id.getAndIncrement())
 	}
 
 	private val dics = new ArrayBuffer[Dict]
 
 	private var initial = false
 
-	def transform(iterator: Iterator[IndexedSeq[String]]) = {
+	def transform(iterator: Iterator[IndexedSeq[String]]): immutable.IndexedSeq[IndexedSeq[Int]] = {
 
 		iterator.map(x => {
 				var count = 0
@@ -39,7 +39,7 @@ class DataNumeric {
 			}).toIndexedSeq
 	}
 
-	def separate(data: IndexedSeq[IndexedSeq[Int]]) = {
+	def separate(data: IndexedSeq[IndexedSeq[Int]]): IndexedSeq[LabeledVector] = {
 		data.map(x => {
 			val ar: Array[Int] = x.slice(0, x.length-1).toArray
 			LabeledVector(x.last, new DenseVector[Int](ar))
@@ -55,7 +55,20 @@ object DataNumeric {
 			input = new FileReader("./data/original/original_classification.csv"),
 			skipLines = 1))
 
-		new NaiveBayes().fit(dn.separate(result).toArray)
+		val model = new NaiveBayes().fit(dn.separate(result).toArray)
+
+		//model.postProbability.foreach(println)
+
+		val vector = new DenseVector[Int](Array(0,2,0,1))
+//		val r = model.predictProbability(vector)
+//		r.foreach(println)
+		val r = model.predict(vector)
+		println(r)
+
+//		println(model.smoothProbability)
+//		r.foreach(println)
+//		println("---------------------")
+//		model.numeric(r).foreach(println)
 
 	}
 }

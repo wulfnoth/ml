@@ -48,11 +48,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>23.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.scalanlp</groupId>
             <artifactId>breeze_2.11</artifactId>
             <version>0.13.2</version>

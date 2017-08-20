@@ -14,5 +14,4 @@ case class LabeledVector(label: Int, vector: Vector[Int]) {
 		sb.substring(0, sb.size-1)
 	}
 
-
 }
