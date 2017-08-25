@@ -1,6 +1,7 @@
-package org.wulfnoth.ml.classification
+package org.wulfnoth.ml.classification.nb
 
 import org.wulfnoth.ml.LabeledVector
+import org.wulfnoth.ml.classification.CountVector
 
 import scala.collection.mutable
 
@@ -31,6 +32,7 @@ class NaiveBayes {
 	def fit(data: Array[LabeledVector]): NaiveBayesModel = {
 		dim = data.head.vector.size
 		statisticLabel(data)
+		//new MultinomialNBModel(map, dim, smooth)
 		new NaiveBayesModel(map, dim, smooth)
 	}
 
